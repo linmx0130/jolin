@@ -6,8 +6,12 @@
  * See LICENSE file in the root of the repo.
  */
 
-use std::ops::{Add, Sub, Mul, Div};
+use std::ops::{Add, Sub, Mul, Div, Neg};
 use crate::error::{*};
+pub mod mat64;
+pub mod mat32;
+pub use self::mat64::Mat64;
+pub use self::mat32::Mat32;
 /// Trait for all jolin matrices
 /// 
 /// All basic operations on matrices will be declared here.
@@ -17,7 +21,8 @@ pub trait Matrix: PartialEq {
         + Add<Self::Elem, Output = Self::Elem>
         + Sub<Self::Elem, Output = Self::Elem>
         + Mul<Self::Elem, Output = Self::Elem>
-        + Div<Self::Elem, Output = Self::Elem>;
+        + Div<Self::Elem, Output = Self::Elem>
+        + Neg<Output = Self::Elem>;
 
     /// Row count of the matrix
     fn row(&self) -> usize;
@@ -60,11 +65,8 @@ pub trait Matrix: PartialEq {
     fn identity(n: usize) -> Self;
 }
 
-pub mod mat64;
-pub use self::mat64::Mat64;
 
 /* Here is the definitions of some utility functions on matrices */
-
 /// Horizonally concatenate two matrices
 ///
 /// For example
@@ -143,6 +145,18 @@ pub fn add<T: Matrix>(a: &T, b: &T) -> Result<T, JolinError> {
     }
     
     return Ok(T::from_vec(row, column, data));
+}
+
+/// Get the negative of the matrix
+/// 
+/// ```
+/// # use jolin::matrix::{*};
+/// let a = Mat64::new(1, 2, &[1.0, 2.0]);
+/// assert_eq!(neg(&a), Mat64::new(1, 2, &[-1.0, -2.0]));
+/// ```
+pub fn neg<T:Matrix>(a: &T) -> T {
+    let data: Vec<T::Elem> = a.data().iter().map(|x| -(*x)).collect();
+    T::from_vec(a.row(), a.column(), data)
 }
 
 #[cfg(test)]

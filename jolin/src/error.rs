@@ -1,5 +1,9 @@
 /**
+ * error.rs
  * Definiton of all potential error types.
+ * 
+ * Copyright 2023-present Mengxiao Lin, all rights reserved. 
+ * See LICENSE file in the root of the repo.
  */
 
 #[derive(Debug, PartialEq, Copy, Clone, Eq)]
