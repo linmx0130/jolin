@@ -159,5 +159,60 @@ pub fn neg<T:Matrix>(a: &T) -> T {
     T::from_vec(a.row(), a.column(), data)
 }
 
+/// Substract a matrix from another matrix.
+/// 
+/// ```
+/// # use jolin::matrix::{*};
+/// let a = Mat64::new(1, 2, &[1.0, 2.0]);
+/// let b = Mat64::new(1, 2, &[0.5, -0.5]);
+/// let c = sub(&a, &b).unwrap();
+/// assert_eq!(c, Mat64::new(1, 2, &[0.5, 2.5]));
+/// ```
+pub fn sub<T:Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
+    if left.row() != right.row() || left.column() != right.column() {
+        return Err(JolinError::shape_mismatching())
+    }
+
+    let mut data: Vec<T::Elem> = Vec::new();
+    let row = left.row();
+    let column = left.column();
+    data.reserve_exact(row * column);
+    for c in 0..column {
+        for r in 0..row {
+            data.push(left.elem(r, c) - right.elem(r, c));
+        }
+    }
+    Ok(T::from_vec(row, column, data))
+}
+
+/// Multiple two matrices. 
+/// 
+/// ```
+/// # use jolin::matrix::{*};
+/// let a = Mat64::new(2, 2, &[1.0, 1.0, 0.0, 1.0]);
+/// let b = Mat64::new(2, 1, &[0.5, 1.0]);
+/// let c = mul(&a, &b).unwrap();
+/// assert_eq!(c, Mat64::new(2, 1, &[0.5, 1.5]));
+/// ```
+
+pub fn mul<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
+    if left.column() != right.row() {
+        return Err(JolinError::shape_mismatching())
+    }
+    
+    let mut ans = T::zero(left.row(), right.column());
+    for c in 0..ans.column() {
+        for r in 0..ans.row() {
+            let mut t = ans.elem(r, c); // must be a zero elem of T::Elem
+            for k in 0..left.column() {
+                t = t + left.elem(r, k) * right.elem(k, c)
+            }
+            let idx = ans.idx(r, c);
+            ans.data_mut()[idx] = t;
+        }
+    }
+    Ok(ans)
+}
+
 #[cfg(test)]
 mod test;

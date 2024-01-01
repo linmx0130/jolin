@@ -1,3 +1,5 @@
+use std::error::Error;
+
 /**
  * error.rs
  * Definiton of all potential error types.
