@@ -1,4 +1,4 @@
-/**
+/*
  * matrix/mod.rs
  * Matrix definition of jolin library.
  * 
@@ -8,10 +8,14 @@
 
 use std::ops::{Add, Sub, Mul, Div, Neg};
 use crate::error::{*};
+/// 64-bit float point real matrix definition
 pub mod mat64;
+/// 32-bit float point real matrix definition
 pub mod mat32;
+
 pub use self::mat64::Mat64;
 pub use self::mat32::Mat32;
+
 /// Trait for all jolin matrices
 /// 
 /// All basic operations on matrices will be declared here.
@@ -181,7 +185,7 @@ pub fn neg<T:Matrix>(a: &T) -> T {
     T::from_vec(a.row(), a.column(), data)
 }
 
-/// Substract a matrix from another matrix.
+/// Substract a matrix from another matrix
 /// 
 /// ```
 /// # use jolin::matrix::{*};

@@ -1,4 +1,4 @@
-/**
+/*
  * matrix/mat32.rs
  * Matrix definition of jolin library.
  * 

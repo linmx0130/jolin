@@ -1,4 +1,4 @@
-/**
+/*
  * lib.rs
  * Root lib file
  * 
@@ -6,7 +6,9 @@
  * See LICENSE file in the root of the repo.
  */
 
+/// Matrix definition and basic matrix operations
 pub mod matrix;
+/// Error definition module
 pub mod error;
 
 pub use matrix::Mat32;

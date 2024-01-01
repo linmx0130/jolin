@@ -1,4 +1,4 @@
-/**
+/*
  * matrix/test.rs
  * Tests for matrix functions.
  * 

@@ -1,4 +1,4 @@
-/**
+/*
  * error.rs
  * Definiton of all potential error types.
  * 
