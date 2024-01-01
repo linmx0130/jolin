@@ -13,6 +13,7 @@ pub mod error;
 
 pub use matrix::Mat32;
 pub use matrix::Mat64;
+pub use matrix::Matrix;
 
 /// Create a 64-bit real matrix where data written row by row, seperated by ';'.
 ///
@@ -52,7 +53,7 @@ macro_rules! mat64 {
                     }
                 }
             )*
-            jolin::matrix::tr(&Mat64::from_vec(row, col, items))
+            $crate::matrix::tr(&$crate::matrix::Mat64::from_vec(row, col, items))
         }
     };
 }
