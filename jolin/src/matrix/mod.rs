@@ -262,5 +262,19 @@ pub fn tr<T:Matrix>(a: &T) -> T {
     ans
 }
 
+/// Apply element-wise operation on a matrix to create a new matrix
+/// 
+/// ```
+/// # use jolin::matrix::{*};
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 2.0; -3.0, 4.0];
+/// let a2 = elemwise(&a, |x| x*x);
+/// assert_eq!(a2, mat64![1.0, 4.0; 9.0, 16.0]);
+/// ```
+pub fn elemwise<T: Matrix, F: FnMut(&T::Elem) -> T::Elem>(a: &T, f: F) -> T {
+    let new_data: Vec<T::Elem> = a.data().iter().map(f).collect(); 
+    T::from_vec(a.row(), a.column(), new_data)
+}
+
 #[cfg(test)]
 mod test;
