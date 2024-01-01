@@ -1,5 +1,3 @@
-use std::error::Error;
-
 /**
  * error.rs
  * Definiton of all potential error types.
@@ -10,7 +8,8 @@ use std::error::Error;
 
 #[derive(Debug, PartialEq, Copy, Clone, Eq)]
 pub enum JolinErrorKind {
-    ShapeMismatching
+    ShapeMismatching,
+    NotEnoughInput
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -22,6 +21,12 @@ impl JolinError {
     pub fn shape_mismatching() -> JolinError {
         JolinError {
             _kind: JolinErrorKind::ShapeMismatching
+        }
+    }
+
+    pub fn not_enough_input() -> JolinError {
+        JolinError {
+            _kind: JolinErrorKind::NotEnoughInput
         }
     }
 

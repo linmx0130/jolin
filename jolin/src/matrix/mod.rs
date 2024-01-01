@@ -67,27 +67,37 @@ pub trait Matrix: PartialEq {
 
 
 /* Here is the definitions of some utility functions on matrices */
-/// Horizonally concatenate two matrices
+/// Horizonally concatenate matrices
 ///
 /// For example
 /// ```
 /// # use jolin::matrix::{*};
 /// let a = Mat64::new(2, 2, &[1.0, 2.0, 3.0, 4.0]);
 /// let b = Mat64::new(2, 1, &[5.0, 6.0]);
-/// let c = hcat(&a, &b).unwrap();
+/// let c = hcat(&[&a, &b]).unwrap();
 /// assert_eq!(c, Mat64::new(2, 3, &[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
 /// ```
 /// 
 /// A shape mismatching error will be returned if the column counts of the input matrices don't match.
-pub fn hcat<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError>{
-    if left.row() != right.row() {
-        return Err(JolinError::shape_mismatching())
+pub fn hcat<T: Matrix>(mat: &[&T]) -> Result<T, JolinError>{
+    if mat.len() < 1 {
+        return Err(JolinError::not_enough_input())
     }
+    let new_row = mat[0].row();
+    for m in mat.iter() {
+        if m.row() != new_row {
+            return Err(JolinError::shape_mismatching())
+        }
+    }
+
+    // compute new column size
+    let new_column:usize = mat.iter().map(|m| m.column()).sum();
+    
     let mut data: Vec<T::Elem> = Vec::new();
-    data.extend_from_slice(left.data());
-    data.extend_from_slice(right.data());
-    let new_row = left.row();
-    let new_column = left.column() + right.column();
+    data.reserve_exact(new_row * new_column);
+    for m in mat.iter() {
+        data.extend_from_slice(m.data());
+    }
     Ok(T::from_vec(new_row, new_column, data))
 }
 
@@ -98,22 +108,32 @@ pub fn hcat<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError>{
 /// # use jolin::matrix::{*};
 /// let a = Mat64::new(2, 2, &[1.0, 2.0, 3.0, 4.0]);
 /// let b = Mat64::new(1, 2, &[5.0, 6.0]);
-/// let c = vcat(&a, &b).unwrap();
+/// let c = vcat(&[&a, &b]).unwrap();
 /// assert_eq!(c, Mat64::new(3, 2, &[1.0, 2.0, 5.0, 3.0, 4.0, 6.0]));
 /// ```
 /// 
 /// A shape mismatching error will be returned if the column counts of the input matrices don't match.
-pub fn vcat<T: Matrix>(up: &T, bottom: &T) -> Result<T, JolinError>{
-    if up.column() != bottom.column() {
-        return Err(JolinError::shape_mismatching())
+pub fn vcat<T: Matrix>(mat: &[&T]) -> Result<T, JolinError>{
+    if mat.len() < 1 {
+        return Err(JolinError::not_enough_input())
     }
+    let new_column = mat[0].column();
+    for m in mat.iter() {
+        if m.column() != new_column {
+            return Err(JolinError::shape_mismatching())
+        }
+    }
+
     let mut data: Vec<T::Elem> = Vec::new();
-    let new_row = up.row() + bottom.row();
-    let new_column = up.column();
+    
+    // compute new column size
+    let new_row:usize = mat.iter().map(|m| m.row()).sum();
+    
     data.reserve_exact(new_row * new_column);
     for c in 0..new_column {
-        data.extend_from_slice(up.data_column(c));
-        data.extend_from_slice(bottom.data_column(c));
+        for m in mat.iter() {
+            data.extend_from_slice(m.data_column(c));
+        }
     }
     Ok(T::from_vec(new_row, new_column, data))
 }
