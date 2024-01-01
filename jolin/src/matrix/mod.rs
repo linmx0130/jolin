@@ -72,10 +72,11 @@ pub trait Matrix: PartialEq {
 /// For example
 /// ```
 /// # use jolin::matrix::{*};
-/// let a = Mat64::new(2, 2, &[1.0, 2.0, 3.0, 4.0]);
-/// let b = Mat64::new(2, 1, &[5.0, 6.0]);
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 2.0; 3.0, 4.0];
+/// let b = mat64![5.0; 6.0];
 /// let c = hcat(&[&a, &b]).unwrap();
-/// assert_eq!(c, Mat64::new(2, 3, &[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+/// assert_eq!(c, mat64![1.0, 2.0, 5.0; 3.0, 4.0, 6.0]);
 /// ```
 /// 
 /// A shape mismatching error will be returned if the column counts of the input matrices don't match.
@@ -106,8 +107,9 @@ pub fn hcat<T: Matrix>(mat: &[&T]) -> Result<T, JolinError>{
 /// For example
 /// ```
 /// # use jolin::matrix::{*};
-/// let a = Mat64::new(2, 2, &[1.0, 2.0, 3.0, 4.0]);
-/// let b = Mat64::new(1, 2, &[5.0, 6.0]);
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 3.0; 2.0, 4.0];
+/// let b = mat64![5.0, 6.0];
 /// let c = vcat(&[&a, &b]).unwrap();
 /// assert_eq!(c, Mat64::new(3, 2, &[1.0, 2.0, 5.0, 3.0, 4.0, 6.0]));
 /// ```
@@ -183,8 +185,9 @@ pub fn neg<T:Matrix>(a: &T) -> T {
 /// 
 /// ```
 /// # use jolin::matrix::{*};
-/// let a = Mat64::new(1, 2, &[1.0, 2.0]);
-/// let b = Mat64::new(1, 2, &[0.5, -0.5]);
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 2.0];
+/// let b = mat64![0.5, -0.5];
 /// let c = sub(&a, &b).unwrap();
 /// assert_eq!(c, Mat64::new(1, 2, &[0.5, 2.5]));
 /// ```
@@ -209,10 +212,11 @@ pub fn sub<T:Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
 /// 
 /// ```
 /// # use jolin::matrix::{*};
-/// let a = Mat64::new(2, 2, &[1.0, 1.0, 0.0, 1.0]);
-/// let b = Mat64::new(2, 1, &[0.5, 1.0]);
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 0.0; 1.0, 1.0];
+/// let b = mat64![0.5; 1.0];
 /// let c = mul(&a, &b).unwrap();
-/// assert_eq!(c, Mat64::new(2, 1, &[0.5, 1.5]));
+/// assert_eq!(c, mat64![0.5; 1.5]);
 /// ```
 
 pub fn mul<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
@@ -232,6 +236,26 @@ pub fn mul<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
         }
     }
     Ok(ans)
+}
+
+/// Transpose of the matrix
+/// 
+/// ```
+/// # use jolin::matrix::{*};
+/// # use jolin::mat64;
+/// let a = mat64![1.0, 2.0; 3.0, 4.0; 5.0, 6.0]; 
+/// assert_eq!(tr(&a), mat64![1.0, 3.0, 5.0; 2.0, 4.0, 6.0]);
+/// ```
+pub fn tr<T:Matrix>(a: &T) -> T {
+    let mut ans = T::zero(a.column(), a.row());
+    for r in 0..a.row() {
+        for c in 0..a.column() {
+            let ans_idx = ans.idx(c, r);
+            ans.data_mut()[ans_idx] = a.elem(r, c);
+        }
+    }
+    vec![1,2,3];
+    ans
 }
 
 #[cfg(test)]
