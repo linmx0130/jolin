@@ -8,8 +8,12 @@
 
 #[derive(Debug, PartialEq, Copy, Clone, Eq)]
 pub enum JolinErrorKind {
+    /// The shape of input matrices doesn't match or satisfy the requirements.
     ShapeMismatching,
-    NotEnoughInput
+    /// Not enough input is provided.
+    NotEnoughInput,
+    /// Singular matrix is encountered.
+    SingularMatrix
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -27,6 +31,12 @@ impl JolinError {
     pub fn not_enough_input() -> JolinError {
         JolinError {
             _kind: JolinErrorKind::NotEnoughInput
+        }
+    }
+
+    pub fn singular_matrix() -> JolinError {
+        JolinError {
+            _kind: JolinErrorKind::SingularMatrix
         }
     }
 

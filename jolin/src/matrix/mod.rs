@@ -16,17 +16,24 @@ pub mod mat32;
 pub use self::mat64::Mat64;
 pub use self::mat32::Mat32;
 
+/// Trait for numbers - float numbers and all numbers can be used as the elements of the matrix
+pub trait LikeNumber: Copy + PartialEq + PartialOrd
+        + Add<Self, Output = Self>
+        + Sub<Self, Output = Self>
+        + Mul<Self, Output = Self>
+        + Div<Self, Output = Self>
+        + Neg<Output = Self>
+{
+    fn zero() -> Self;
+    fn abs(&self) -> Self;
+}
+
 /// Trait for all jolin matrices
 /// 
 /// All basic operations on matrices will be declared here.
-pub trait Matrix: PartialEq {
+pub trait Matrix: PartialEq + Clone {
     /// Element type, must be f64 or f32
-    type Elem: Copy + PartialEq 
-        + Add<Self::Elem, Output = Self::Elem>
-        + Sub<Self::Elem, Output = Self::Elem>
-        + Mul<Self::Elem, Output = Self::Elem>
-        + Div<Self::Elem, Output = Self::Elem>
-        + Neg<Output = Self::Elem>;
+    type Elem: LikeNumber;
 
     /// Row count of the matrix
     fn row(&self) -> usize;
@@ -274,6 +281,21 @@ pub fn tr<T:Matrix>(a: &T) -> T {
 pub fn elemwise<T: Matrix, F: FnMut(&T::Elem) -> T::Elem>(a: &T, f: F) -> T {
     let new_data: Vec<T::Elem> = a.data().iter().map(f).collect(); 
     T::from_vec(a.row(), a.column(), new_data)
+}
+
+/// Whether two matrices are equal with the allowed error
+pub fn eq_with_error<T:Matrix>(a: &T, b:&T, eps: T::Elem) -> bool {
+    // different shape
+    if a.row() != b.row() || a.column() != b.column() {
+        return false
+    }
+    let n = a.row() * a.column();
+    for idx in 0..n {
+        if (a.data()[idx] - b.data()[idx]).abs() > eps {
+            return false
+        }   
+    }
+    true
 }
 
 #[cfg(test)]

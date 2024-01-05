@@ -10,6 +10,8 @@
 pub mod matrix;
 /// Error definition module
 pub mod error;
+/// Matrix decomposition algorithms
+pub mod decomp;
 
 pub use matrix::Mat32;
 pub use matrix::Mat64;

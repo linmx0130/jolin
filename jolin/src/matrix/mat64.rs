@@ -6,7 +6,20 @@
  * See LICENSE file in the root of the repo.
  */
 
-use super::Matrix;
+use super::{Matrix, LikeNumber};
+
+impl LikeNumber for f64 {
+    fn zero() -> Self {
+        0.0
+    }
+    fn abs(&self) -> Self {
+        if *self > 0.0 {
+            *self
+        } else {
+            -*self
+        }
+    }
+}
 
 /// 64-bit float point real number matrix
 #[derive(Debug, Clone)]
