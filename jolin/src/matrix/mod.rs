@@ -62,6 +62,12 @@ pub trait Matrix: PartialEq + Clone {
         self.data()[self.idx(r, c)]
     }
 
+    /// Get the mut reference on the element at [r, c]
+    fn elem_mut(&mut self, r: usize, c: usize) -> &mut Self::Elem {
+        let idx = self.idx(r, c);
+        &mut self.data_mut()[idx]
+    }
+
     /// Get reference to the column of c. No copy will occur as we are in column-major.
     fn data_column(&self, c: usize) -> &[Self::Elem];
 
@@ -246,8 +252,7 @@ pub fn mul<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
             for k in 0..left.column() {
                 t = t + left.elem(r, k) * right.elem(k, c)
             }
-            let idx = ans.idx(r, c);
-            ans.data_mut()[idx] = t;
+            *ans.elem_mut(r, c) = t;
         }
     }
     Ok(ans)
@@ -265,11 +270,9 @@ pub fn tr<T:Matrix>(a: &T) -> T {
     let mut ans = T::zero(a.column(), a.row());
     for r in 0..a.row() {
         for c in 0..a.column() {
-            let ans_idx = ans.idx(c, r);
-            ans.data_mut()[ans_idx] = a.elem(r, c);
+            *ans.elem_mut(c, r) = a.elem(r, c);
         }
     }
-    vec![1,2,3];
     ans
 }
 

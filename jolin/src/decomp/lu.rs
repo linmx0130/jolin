@@ -19,6 +19,14 @@ pub struct LUDecomposition<T: Matrix> {
     pub p: Vec<usize>
 }
 
+/// Perform LU decomposition. The answer will be a `LUDecomposition` struct.
+/// 
+/// Row-max pivoting is adopted. The row with maximal absolute value on the 
+/// column to be eliminated will be used as the pivot.
+/// 
+/// Potential errors:
+/// 1. Shape mismatching - if the matrix is not square.
+/// 2. Singular matrix - if the matrix is singular
 pub fn lu<T: Matrix>(mat: &T) -> Result<LUDecomposition<T>, JolinError> {
     if mat.row() != mat.column() {
         // Square matrix is required
@@ -29,7 +37,7 @@ pub fn lu<T: Matrix>(mat: &T) -> Result<LUDecomposition<T>, JolinError> {
     let mut a = mat.clone();
     let n = a.row();
     let mut p : Vec<usize> = (0..n).collect();
-    let mut inv_p: Vec<usize> = (0..n).collect();
+    let mut inv_p: Vec<usize> = p.clone();
     let mut l: T = T::identity(n);
     let mut u: T = T::zero(n, n);
 
@@ -74,12 +82,10 @@ pub fn lu<T: Matrix>(mat: &T) -> Result<LUDecomposition<T>, JolinError> {
             if a.elem(r, i) != T::Elem::zero() {
                 let ratio = a.elem(r, i) / u.elem(i, i);
                 for c in i..n {
-                    let idx_a = a.idx(r, c);
                     let original_value = a.elem(r, c);
-                    a.data_mut()[idx_a] = original_value - ratio * u.elem(i, c);
+                    *a.elem_mut(r, c) = original_value - ratio * u.elem(i, c);
                 }
-                let idx_l = l.idx(inv_p[r], i);
-                l.data_mut()[idx_l] = ratio;
+                *l.elem_mut(inv_p[r], i) = ratio;
             }
         }
     }
