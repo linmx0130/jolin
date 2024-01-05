@@ -16,7 +16,9 @@ pub mod mat32;
 pub use self::mat64::Mat64;
 pub use self::mat32::Mat32;
 
-/// Trait for numbers - float numbers and all numbers can be used as the elements of the matrix
+/// Trait for numbers that can be used as the elements of the matrix.
+/// 
+/// For now, only f32 and f64 implement this trait.
 pub trait LikeNumber: Copy + PartialEq + PartialOrd
         + Add<Self, Output = Self>
         + Sub<Self, Output = Self>
@@ -24,7 +26,9 @@ pub trait LikeNumber: Copy + PartialEq + PartialOrd
         + Div<Self, Output = Self>
         + Neg<Output = Self>
 {
+    /// Obtained the zero element
     fn zero() -> Self;
+    /// Get the absolute value (or modulus) of the number
     fn abs(&self) -> Self;
 }
 

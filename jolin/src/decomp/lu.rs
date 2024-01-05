@@ -12,11 +12,11 @@ use crate::error::JolinError;
 /// The answer of LU decomposition
 pub struct LUDecomposition<T: Matrix> {
     /// Lower triangular matrix
-    l: T,
+    pub l: T,
     /// Upper triangular matrix
-    u: T,
+    pub u: T,
     /// Permutation index
-    p: Vec<usize>
+    pub p: Vec<usize>
 }
 
 pub fn lu<T: Matrix>(mat: &T) -> Result<LUDecomposition<T>, JolinError> {
