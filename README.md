@@ -1,5 +1,7 @@
 jolin
 ===
+![Rust build & test](https://github.com/linmx0130/jolin/actions/workflows/rust.yml/badge.svg?branch=main)
+
 **J**ust **O**ne **LIN**ear algebra library in Rust. Still in development.
 
 * Focus on simplicity and avoid dependencies on any other libraries.
