@@ -7,6 +7,7 @@
  */
 
 use std::ops::{Add, Sub, Mul, Div, Neg};
+use std::iter::Sum;
 use crate::error::{*};
 /// 64-bit float point real matrix definition
 pub mod mat64;
@@ -25,11 +26,14 @@ pub trait LikeNumber: Copy + PartialEq + PartialOrd
         + Mul<Self, Output = Self>
         + Div<Self, Output = Self>
         + Neg<Output = Self>
+        + Sum
 {
     /// Obtained the zero element
     fn zero() -> Self;
     /// Get the absolute value (or modulus) of the number
     fn abs(&self) -> Self;
+    /// Square root of the number
+    fn sqrt(&self) -> Self;
 }
 
 /// Trait for all jolin matrices

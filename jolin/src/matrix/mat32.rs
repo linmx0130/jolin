@@ -19,6 +19,9 @@ impl LikeNumber for f32 {
             -*self
         }
     }
+    fn sqrt(&self) -> Self {
+        (*self).sqrt()
+    }
 }
 
 /// 32-bit float point real number matrix
