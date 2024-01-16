@@ -34,6 +34,8 @@ pub trait LikeNumber: Copy + PartialEq + PartialOrd
     fn abs(&self) -> Self;
     /// Square root of the number
     fn sqrt(&self) -> Self;
+    /// Sign of the number times the unit. For zero, it could return either value.
+    fn sign(&self) -> Self;
 }
 
 /// Trait for all jolin matrices

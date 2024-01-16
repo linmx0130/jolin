@@ -22,6 +22,13 @@ impl LikeNumber for f64 {
     fn sqrt(&self) -> Self {
         (*self).sqrt()
     }
+    fn sign(&self) -> Self {
+        if *self >= 0.0 {
+            1.0
+        } else {
+            -1.0
+        }
+    }
 }
 
 /// 64-bit float point real number matrix
