@@ -36,6 +36,14 @@ pub trait LikeNumber: Copy + PartialEq + PartialOrd
     fn sqrt(&self) -> Self;
     /// Sign of the number times the unit. For zero, it could return either value.
     fn sign(&self) -> Self;
+    /// Trigonometric sine function `sin(x)` of the number
+    fn sin(&self) -> Self;
+    /// Trigonometric cosine function `cos(x)` of the number
+    fn cos(&self) -> Self;
+    /// Natural logarithm
+    fn ln(&self) -> Self;
+    /// Return self times v in f64.
+    fn times_real(&self, v: f64) -> Self;
 }
 
 /// Trait for all jolin matrices

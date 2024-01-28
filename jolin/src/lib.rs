@@ -12,6 +12,8 @@ pub mod matrix;
 pub mod error;
 /// Matrix decomposition algorithms
 pub mod decomp;
+/// Random matrix generators
+pub mod rand;
 
 pub use matrix::Mat32;
 pub use matrix::Mat64;

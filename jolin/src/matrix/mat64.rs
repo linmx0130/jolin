@@ -29,6 +29,18 @@ impl LikeNumber for f64 {
             -1.0
         }
     }
+    fn sin(&self) -> Self {
+        f64::sin(*self)
+    }
+    fn cos(&self) -> Self {
+        f64::cos(*self)
+    }
+    fn ln(&self) -> Self {
+        f64::ln(*self)
+    }
+    fn times_real(&self, v: f64) -> Self {
+        return (*self) * v;
+    }
 }
 
 /// 64-bit float point real number matrix
