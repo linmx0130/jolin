@@ -290,6 +290,35 @@ pub fn tr<T:Matrix>(a: &T) -> T {
     ans
 }
 
+/// Transpose the left matrix and multiple it with the right matrix
+/// 
+/// It is an easy way to execute `mul(tr(A), B)`.
+/// ```
+/// # use jolin::matrix::{*};
+/// # use jolin::mat64;
+/// let a = mat64![1.0; 2.0];
+/// let b = mat64![0.5; 0.75];
+/// let c = trmul(&a, &b).unwrap();
+/// assert_eq!(c, mat64![2.0]);
+/// ```
+pub fn trmul<T: Matrix>(left: &T, right: &T) -> Result<T, JolinError> {
+    if left.row() != right.row() {
+        return Err(JolinError::shape_mismatching()); 
+    }
+
+    let mut ans = T::zero(left.column(), right.column());
+    for c in 0.. ans.column() {
+        for r in 0..ans.column() {
+            let mut t = ans.elem(r, c);
+            for k in 0..left.row() {
+                t = t + left.elem(k, r) * right.elem(k, c);
+            }
+            *ans.elem_mut(r, c) = t;
+        }
+    }
+    Ok(ans)
+}
+
 /// Apply element-wise operation on a matrix to create a new matrix
 /// 
 /// ```
