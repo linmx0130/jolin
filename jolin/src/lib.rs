@@ -14,6 +14,8 @@ pub mod error;
 pub mod decomp;
 /// Random matrix generators
 pub mod rand;
+/// Determinants
+pub mod det;
 
 pub use matrix::Mat32;
 pub use matrix::Mat64;
